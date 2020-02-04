@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Dexie from 'dexie';
 import db from './db';
 import Navi from './Navi';
@@ -10,15 +10,36 @@ const room_url = 'https://lambda-treasure-hunt.herokuapp.com/api/adv/init/';
 export default function Explore() {
 
     const [room,setRoom] = useState();
+    const [cooldown,setCooldown] = useState(0);
+    const [coolErr, setCoolErr] = useState('');
 
-    const move = () => {
+
+    const coolTimer = (cd) => {
+        cd = Math.ceil(cd);
+        console.log(cd);
+        setCooldown(cd);
+        let interval = setInterval(() => {
+            console.log('cooldown: ', cd);
+            cd -= 1;
+            setCooldown(lastcool => lastcool-1);
+            if (cd <= 0) clearInterval(interval);
+        },1000)
+    }
+
+    const move = (way) => {
         console.log('move clicked');
-        axios.post(move_url, {direction: 's'},{headers : {Authorization : 'Token e91091807dc50e6bf25669440c1b4fc3ebaf2aaa'}})
+        axios.post(move_url, {direction: way},{headers : {Authorization : 'Token e91091807dc50e6bf25669440c1b4fc3ebaf2aaa'}})
             .then(res => {
-                console.log(res.data);
+                console.log('in then', res.data);
                 setRoom(res.data);
             })
-            .catch(err => console.log(err.response))
+            .catch(err => {
+                console.log('in catch', err.response);
+                let cd = err.response.data.cooldown;
+                const coolErr = err.response.data.cooldown.errors;
+                coolTimer(cd);
+                setCoolErr(coolErr)
+            })
     }
 
     const getRoom = () => {
@@ -27,22 +48,31 @@ export default function Explore() {
                 console.log(res.data);
                 setRoom(res.data)
             })
-            .catch(err => console.log(err.response))
+            .catch(err => {
+                console.log(err.response);
+                let cd = err.response.data.cooldown;
+                const coolErr = err.response.data.cooldown.errors;
+                // setCooldown(cd)
+                coolTimer(cd)
+                setCoolErr(coolErr)
+            })
     }
 
     return (
         <>
             <Navi move={move} getRoom={getRoom} />
             {room && <ul>
+                        <li>{room.room_id}</li>
                         <li>{room.title}</li>
                         <li>{room.description}</li>
                         <h4>Exits</h4>
                         <div class="exits">
                             {room.exits.map(e => <p>{e}</p>)}
                         </div>
+                        {room.errors && room.errors.map(e => <li>{e}</li>)}
                     </ul>
             }
-            
+            {cooldown > 0 && <div><span>Too tired to move! Must Wait: </span><br/>{cooldown}</div>}
         </>
     )
 }

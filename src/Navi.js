@@ -6,10 +6,10 @@ export default function Navi({move,getRoom}) {
     return (
         <>
             <div class="navi">
-                <button onClick={() => move()} id="up">Up</button>
-                <button onClick={() => move()} id="down">Down</button>
-                <button onClick={() => move()} id="left">Left</button>
-                <button onClick={() => move()} id="right">Right</button>
+                <button onClick={() => move('n')} id="up">North</button>
+                <button onClick={() => move('s')} id="down">South</button>
+                <button onClick={() => move('e')} id="left">East</button>
+                <button onClick={() => move('w')} id="right">West</button>
             </div>
             <button onClick={getRoom}>Current Room</button>
         </>

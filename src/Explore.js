@@ -2,18 +2,17 @@ import React, {useState, useEffect} from 'react';
 import Dexie from 'dexie';
 import db from './db';
 import Navi from './Navi';
-import axios from 'axios';
 import axiosAuth from './utils/axiosAuth';
+import Room from './Room';
 
-const move_url = 'https://lambda-treasure-hunt.herokuapp.com/api/adv/move/'
-const room_url = 'https://lambda-treasure-hunt.herokuapp.com/api/adv/init/';
+
+// db.open()
 
 export default function Explore() {
-
     const [room,setRoom] = useState();
     const [cooldown,setCooldown] = useState(0);
     const [coolErr, setCoolErr] = useState('');
-
+    const [explored, setExplored] = useState([])
 
     const coolTimer = (cd) => {
         cd = Math.ceil(cd);
@@ -27,13 +26,42 @@ export default function Explore() {
         },1000)
     }
 
+    const footsteps = async () => {
+        console.log('getting footsteps please wait...')
+        if (explored.length) {
+            setExplored([])
+            return;
+        }
+        try {
+            const footsteps = await db.rooms.toArray();
+            console.log('rooms explored', footsteps);
+            setExplored(footsteps)
+        } catch(err) {
+            console.log('error retrieving data', err);
+        }
+    }
+
+    const clearFootsteps = () => {
+        console.log('clearing footsteps...');
+
+    }
+
+
     const move = (way) => {
         console.log('move clicked');
 
-        axiosAuth().post('/move',{direction: way})
-            .then(res => {
-                console.log('in then', res.data);
+         axiosAuth().post('/move',{direction: way})
+            .then(async res => {
+                console.log('moved: ', res.data);
                 setRoom(res.data);
+                try {
+                    await db.table('rooms').add(res.data);
+                } catch(err) {
+                    console.log('err adding to db', err)
+                }
+                // db.table('rooms').add(res.data)
+                //     .then(res => console.log('room data'))
+                //     .catch(err => console.log('err adding', err))
             })
             .catch(err => {
                 console.log('in catch', err.response);
@@ -63,20 +91,11 @@ export default function Explore() {
 
     return (
         <>
-            <Navi move={move} getRoom={getRoom} />
-            {room && <ul>
-                        <li>{room.room_id}</li>
-                        <li>{room.title}</li>
-                        <li>{room.description}</li>
-
-                        <h4>Exits</h4>
-                        <div class="exits">
-                            {room.exits.map(e => <p>{e}</p>)}
-                        </div>
-                        {room.errors && room.errors.map(e => <li>{e}</li>)}
-                    </ul>
-            }
+            <Navi move={move} getRoom={getRoom} footsteps={footsteps} clear={clearFootsteps} />
+            {room && <Room room={room}/>}
             {cooldown > 0 && <div><span>Too tired to move! Must Wait: </span><br/>{cooldown}</div>}
+            {explored.length && <div>Explored Rooms</div>}
+            {explored.map(room => <Room room={room}/>)}
         </>
     )
 }

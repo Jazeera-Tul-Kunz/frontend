@@ -1,5 +1,3 @@
-// const axios = require('axios');
-// require('dotenv').config();
 import axios from 'axios';
 import dotenv from 'dotenv'
 dotenv.config();
@@ -14,6 +12,3 @@ export default function axiosAuth() {
     }
     return axios.create(config)
 }
-
-// module.exports = axiosAuth;
-

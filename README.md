@@ -50,7 +50,7 @@ Copy
 Movement
 All actions are executed via REST API commands to the Lambda Treasure Hunt server. Here is an example movement command:
 
-curl -X POST -H 'Authorization: Token 7a375b52bdc410eebbc878ed3e58b2e94a8cb607' -H "Content-Type: application/json" -d '{"direction":"n"}' https://lambda-treasure-hunt.herokuapp.com/api/adv/move/
+curl -X POST -H 'Authorization: Token xxxxxxxxxxx' -H "Content-Type: application/json" -d '{"direction":"n"}' https://lambda-treasure-hunt.herokuapp.com/api/adv/move/
 
 You will receive an authorization token following successful completion of Friday’s Sprint Challenge. This serves as your unique identifier and authentication key. Don’t share this key!
 

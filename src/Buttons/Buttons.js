@@ -23,23 +23,47 @@ export const Buttons = props => {
   };
 
   return (
-    <div>
-      <Button variant="dark" onClick={() => moveCommand("n")}>
+    <div style={{ margin: "5px" }}>
+      <Button
+        style={{ margin: "2px" }}
+        variant="dark"
+        onClick={() => moveCommand("n")}
+      >
         North
       </Button>
-      <Button variant="dark" onClick={() => moveCommand("s")}>
+      <Button
+        style={{ margin: "2px" }}
+        variant="dark"
+        onClick={() => moveCommand("s")}
+      >
         South
       </Button>
-      <Button variant="dark" onClick={() => moveCommand("e")}>
+      <Button
+        style={{ margin: "2px" }}
+        variant="dark"
+        onClick={() => moveCommand("e")}
+      >
         East
       </Button>
-      <Button variant="dark" onClick={() => moveCommand("w")}>
+      <Button
+        style={{ margin: "2px" }}
+        variant="dark"
+        onClick={() => moveCommand("w")}
+      >
         West
       </Button>
-      <Button variant="warning" onClick={() => grabCommand()}>
+      <Button
+        style={{ margin: "2px" }}
+        variant="warning"
+        onClick={() => grabCommand()}
+      >
         Treasure
       </Button>
-      <Button variant="success" onClick={() => explore(props.room)}>
+      <Button
+        style={{ margin: "2px" }}
+        variant="success"
+        onClick={() => explore(props.room)}
+      >
         Explore
       </Button>
     </div>

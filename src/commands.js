@@ -1,6 +1,6 @@
 import axios from "axios";
 import { addRoom, getRoom, updateRoom, getTotal } from "./db";
-import { config } from "./config";
+import config from "./config/index";
 
 let coolDownTime = 1;
 
@@ -17,7 +17,8 @@ const coolDown = () => {
 };
 
 export const move = async (direction, nextRoomId) => {
-  await coolDown;
+  let cd = await coolDown();
+  console.log("cd", cd);
 
   return axios
     .post(`${config.API_PATH}/move`, {
@@ -25,7 +26,9 @@ export const move = async (direction, nextRoomId) => {
       next_room_id: nextRoomId
     })
     .then(({ data }) => {
+      console.log(data);
       coolDownTime = data.cooldown ? +data.cooldown : 15;
+      console.log(coolDownTime);
       return data;
     })
     .catch(err => {
@@ -108,40 +111,40 @@ export const sellItem = async item => {
 export const explore = async currentRoom => {
   coolDownTime = currentRoom.cooldown;
 
-  let door;
+  let exit;
   console.log(
     "current room",
     JSON.stringify(currentRoom, null, 1),
-    currentRoom.doors
+    currentRoom.exits
   );
 
-  for (let d of Object.keys(currentRoom.doors)) {
-    if (currentRoom.doors[d] === -1) {
-      door = { [d]: currentRoom.doors[d] };
+  for (let d of Object.keys(currentRoom.exits)) {
+    if (currentRoom.exits[d] === -1) {
+      exit = { [d]: currentRoom.exits[d] };
     }
   }
 
-  if (!door && Object.keys(currentRoom.doors).length === 1) {
-    for (let d of Object.keys(currentRoom.doors)) {
-      door = { [d]: currentRoom.doors[d] };
+  if (!exit && Object.keys(currentRoom.exits).length === 1) {
+    for (let d of Object.keys(currentRoom.exits)) {
+      exit = { [d]: currentRoom.exits[d] };
     }
-  } else if (!door) {
-    const doors = Object.keys(currentRoom.doors);
-    const d = doors[Math.floor(Math.random() * doors.length)];
-    door = { [d]: currentRoom.doors[d] };
+  } else if (!exit) {
+    const exits = Object.keys(currentRoom.exits);
+    const d = exits[Math.floor(Math.random() * exits.length)];
+    exit = { [d]: currentRoom.exits[d] };
   }
-  console.log("Moving ", door);
+  console.log("Moving ", exit);
 
-  let nextRoom = await move(Object.keys(door)[0]);
+  let nextRoom = await move(Object.keys(exit)[0]);
   let visitedRoom = await getRoom(nextRoom.room_id);
   if (!visitedRoom) {
     visitedRoom = await addRoom(nextRoom);
   }
 
-  visitedRoom.doors[getBackwards(Object.keys(door)[0])] = currentRoom.id;
+  visitedRoom.exits[getBackwards(Object.keys(exit)[0])] = currentRoom.id;
   await updateRoom(visitedRoom, visitedRoom.id);
 
-  currentRoom.doors[Object.keys(door)[0]] = visitedRoom.id;
+  currentRoom.exits[Object.keys(exit)[0]] = visitedRoom.id;
   await updateRoom(currentRoom, currentRoom.id);
 
   console.log("current room: ", visitedRoom);

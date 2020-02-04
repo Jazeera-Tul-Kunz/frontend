@@ -1,6 +1,6 @@
 import Dexie from "dexie";
 import axios from "axios";
-import { config } from "./config";
+import config from "./config/index";
 
 let db;
 
@@ -26,6 +26,7 @@ export const start = () => {
       });
     })
     .catch(err => {
+      console.log("HEERE");
       throw err;
     });
 };
@@ -38,11 +39,12 @@ export const getRoom = id => {
 
 export const addRoom = room => {
   room.id = room.room_id;
-  let doors = {};
-  for (let i of room.doors) {
-    doors[i] = -1;
+  let exits = {};
+  console.log("room", room);
+  for (let i of room.exits) {
+    exits[i] = -1;
   }
-  room.doors = doors;
+  room.exits = exits;
 
   return db
     .table("rooms")

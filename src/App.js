@@ -1,24 +1,26 @@
-import React from "react";
-import logo from "./logo.svg";
+import React, { useState, useEffect } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
+import axios from "axios";
+import { config } from "./config";
+import { start } from "./db";
+import { Buttons } from "./Buttons/Buttons";
 
 function App() {
+  const [room, setRoom] = useState(null);
+  const [player, setPlayer] = useState(null);
+
+  useEffect(() => {
+    axios.defaults.headers.common["Authorization"] = `Token ${config.API_KEY}`;
+
+    start().then(room => {
+      setRoom(room);
+    });
+  });
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Buttons room={room} setRoom={setRoom} />
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import axios from "axios";
-import { addRoom, getRoom, updateRoom, getTotal } from "db";
-import config from "config";
+import { addRoom, getRoom, updateRoom, getTotal } from "./db";
+import { config } from "./config";
 
 let coolDownTime = 1;
 

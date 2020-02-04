@@ -3,6 +3,7 @@ import Dexie from 'dexie';
 import db from './db';
 import Navi from './Navi';
 import axios from 'axios';
+import axiosAuth from './utils/axiosAuth';
 
 const move_url = 'https://lambda-treasure-hunt.herokuapp.com/api/adv/move/'
 const room_url = 'https://lambda-treasure-hunt.herokuapp.com/api/adv/init/';
@@ -19,7 +20,7 @@ export default function Explore() {
         console.log(cd);
         setCooldown(cd);
         let interval = setInterval(() => {
-            console.log('cooldown: ', cd);
+            console.log('cooldown remaining: ', cd);
             cd -= 1;
             setCooldown(lastcool => lastcool-1);
             if (cd <= 0) clearInterval(interval);
@@ -28,7 +29,8 @@ export default function Explore() {
 
     const move = (way) => {
         console.log('move clicked');
-        axios.post(move_url, {direction: way},{headers : {Authorization : 'Token e91091807dc50e6bf25669440c1b4fc3ebaf2aaa'}})
+
+        axiosAuth().post('/move',{direction: way})
             .then(res => {
                 console.log('in then', res.data);
                 setRoom(res.data);
@@ -43,7 +45,8 @@ export default function Explore() {
     }
 
     const getRoom = () => {
-        axios.get(room_url, {headers : {Authorization : 'Token e91091807dc50e6bf25669440c1b4fc3ebaf2aaa'}})
+
+        axiosAuth().get('/init')
             .then(res => {
                 console.log(res.data);
                 setRoom(res.data)
@@ -65,6 +68,7 @@ export default function Explore() {
                         <li>{room.room_id}</li>
                         <li>{room.title}</li>
                         <li>{room.description}</li>
+
                         <h4>Exits</h4>
                         <div class="exits">
                             {room.exits.map(e => <p>{e}</p>)}

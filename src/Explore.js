@@ -4,15 +4,15 @@ import db from './db';
 import Navi from './Navi';
 import axiosAuth from './utils/axiosAuth';
 import Room from './Room';
-
-
-// db.open()
+import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 
 export default function Explore() {
     const [room,setRoom] = useState();
     const [cooldown,setCooldown] = useState(0);
     const [coolErr, setCoolErr] = useState('');
     const [explored, setExplored] = useState([])
+    const [modal, setModal] = useState(false);
+
 
     const coolTimer = (cd) => {
         cd = Math.ceil(cd);
@@ -33,7 +33,7 @@ export default function Explore() {
             return;
         }
         try {
-            const footsteps = await db.rooms.toArray();
+            const footsteps = await db.table('rooms').toArray();
             console.log('rooms explored', footsteps);
             setExplored(footsteps)
         } catch(err) {
@@ -41,9 +41,16 @@ export default function Explore() {
         }
     }
 
-    const clearFootsteps = () => {
+    const clearFootsteps = async () => {
         console.log('clearing footsteps...');
 
+        try {
+            await db.table('rooms').clear();
+            setExplored([]);
+            setModal(!modal);
+        } catch(err) {
+            console.log('err deleting', err);
+        }
     }
 
 
@@ -75,9 +82,10 @@ export default function Explore() {
     const getRoom = () => {
 
         axiosAuth().get('/init')
-            .then(res => {
+            .then(async res => {
                 console.log(res.data);
                 setRoom(res.data)
+                await db.table('rooms').add(res.data);
             })
             .catch(err => {
                 console.log(err.response);
@@ -89,13 +97,22 @@ export default function Explore() {
             })
     }
 
+    const toggleModal = () => setModal(!modal)
+
     return (
         <>
-            <Navi move={move} getRoom={getRoom} footsteps={footsteps} clear={clearFootsteps} />
+            <Navi move={move} getRoom={getRoom} footsteps={footsteps} clear={toggleModal} />
             {room && <Room room={room}/>}
             {cooldown > 0 && <div><span>Too tired to move! Must Wait: </span><br/>{cooldown}</div>}
             {explored.length && <div>Explored Rooms</div>}
             {explored.map(room => <Room room={room}/>)}
+            {modal && <Button color="danger" onClick={clearFootsteps}>Doing this will erase your tracks.  Are you sure you want to proceed?</Button>}
+            {/* <Modal isOpen={modal} toggle={toggleModal} className="modal">
+                <ModalBody>
+                    Doing this will erase your tracks.  Are you sure you want to proceed?
+                   
+                </ModalBody>
+            </Modal> */}
         </>
     )
 }

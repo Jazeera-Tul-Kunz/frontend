@@ -7,7 +7,7 @@ export default function Navi(props) {
 
     return (
         <>
-            <div class="navi">
+            <div className="navi">
                 <button onClick={() => move('n')} id="up">North</button>
                 <button onClick={() => move('s')} id="down">South</button>
                 <button onClick={() => move('e')} id="left">East</button>

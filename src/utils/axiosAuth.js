@@ -1,8 +1,10 @@
-import axios from 'axios';
-import dotenv from 'dotenv'
-dotenv.config();
+// import axios from 'axios';
+// import dotenv from 'dotenv';
+// dotenv.config();
+const axios = require('axios');
+require('dotenv').config()
 
-export default function axiosAuth() {
+function axiosAuth() {
     console.log('API Key in axiosAuth()', process.env.REACT_APP_API_KEY);
     const token = process.env.REACT_APP_API_KEY;
 
@@ -12,3 +14,5 @@ export default function axiosAuth() {
     }
     return axios.create(config)
 }
+
+module.exports = axiosAuth;

@@ -2,9 +2,9 @@ import React, {useState, useEffect} from 'react';
 import Dexie from 'dexie';
 import db from './db';
 import Navi from './Navi';
-import axiosAuth from './utils/axiosAuth';
 import Room from './Room';
 import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
+const axiosAuth = require('./utils/axiosAuth');
 
 export default function Explore() {
     const [room,setRoom] = useState();
@@ -12,7 +12,6 @@ export default function Explore() {
     const [coolErr, setCoolErr] = useState('');
     const [explored, setExplored] = useState([])
     const [modal, setModal] = useState(false);
-
 
     const coolTimer = (cd) => {
         cd = Math.ceil(cd);
@@ -43,7 +42,6 @@ export default function Explore() {
 
     const clearFootsteps = async () => {
         console.log('clearing footsteps...');
-
         try {
             await db.table('rooms').clear();
             setExplored([]);
@@ -52,7 +50,6 @@ export default function Explore() {
             console.log('err deleting', err);
         }
     }
-
 
     const move = (way) => {
         console.log('move clicked');
@@ -66,9 +63,6 @@ export default function Explore() {
                 } catch(err) {
                     console.log('err adding to db', err)
                 }
-                // db.table('rooms').add(res.data)
-                //     .then(res => console.log('room data'))
-                //     .catch(err => console.log('err adding', err))
             })
             .catch(err => {
                 console.log('in catch', err.response);
@@ -80,20 +74,21 @@ export default function Explore() {
     }
 
     const getRoom = () => {
-
         axiosAuth().get('/init')
             .then(async res => {
-                console.log(res.data);
+                console.log('got the init room', res.data);
                 setRoom(res.data)
                 await db.table('rooms').add(res.data);
             })
             .catch(err => {
-                console.log(err.response);
-                let cd = err.response.data.cooldown;
-                const coolErr = err.response.data.cooldown.errors;
-                // setCooldown(cd)
-                coolTimer(cd)
-                setCoolErr(coolErr)
+                console.log('error in get room', err);
+                if (err.response) {
+                    let cd = err.response.data.cooldown;
+                    const coolErr = err.response.data.cooldown.errors;
+                    // setCooldown(cd)
+                    coolTimer(cd)
+                    setCoolErr(coolErr)
+                }
             })
     }
 
@@ -107,12 +102,6 @@ export default function Explore() {
             {explored.length && <div>Explored Rooms</div>}
             {explored.map(room => <Room room={room}/>)}
             {modal && <Button color="danger" onClick={clearFootsteps}>Doing this will erase your tracks.  Are you sure you want to proceed?</Button>}
-            {/* <Modal isOpen={modal} toggle={toggleModal} className="modal">
-                <ModalBody>
-                    Doing this will erase your tracks.  Are you sure you want to proceed?
-                   
-                </ModalBody>
-            </Modal> */}
         </>
     )
 }

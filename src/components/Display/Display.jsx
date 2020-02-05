@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, Row, Col } from "react-bootstrap";
+import { Grid, Row, Col, Button } from "react-bootstrap";
 import { Card } from "../Card/Card";
 
 const Display = props => {
@@ -23,13 +23,9 @@ const Display = props => {
                   <Col md={6}>
                     <h3>{`You enter the room and notice ${props.room.exits.length} doors in the following directions...`}</h3>
                     <h4>
-                      {props.coolErr && props.cooldown > 0 ? (
+                      {props.room.errors.length && props.cooldown > 0 ? (
                         <div>
-                          <h4>
-                            There doesn't seem to be an exit in that direction
-                            <br />
-                            Cooldown Increased
-                          </h4>
+                          <h4>{props.room.errors}</h4>
                         </div>
                       ) : (
                         props.room.exits.map(e => <>{e.toUpperCase()} </>)
@@ -50,12 +46,21 @@ const Display = props => {
                     <Card
                       id="AvailableItems"
                       statsIcon="fa fa-history"
-                      title="Available Items"
+                      title={
+                        props.room.items.length > 0
+                          ? `Available Items (${props.room.items.length})`
+                          : "Available Items"
+                      }
                       stats="filler"
                       category={
                         props.room.items.length
                           ? props.room.items.map(item => (
-                              <div key={item}>{item}</div>
+                              <Button
+                                className="btn btn-primary btn-md"
+                                key={item}
+                              >
+                                {`Pick up ${item}`}
+                              </Button>
                             ))
                           : "There doesn't seem to be any items in this room."
                       }

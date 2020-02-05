@@ -40,7 +40,6 @@ const Dashboard = () => {
   };
 
   const move = way => {
-    console.log("way", way);
     axios
       .post(
         move_url,
@@ -55,7 +54,6 @@ const Dashboard = () => {
         console.log(res.data);
         setRoom(res.data);
         coolTimer(res.data.cooldown);
-        setCoolErr("");
       })
       .catch(err => {
         console.log("in catch", err.response);

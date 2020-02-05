@@ -25,11 +25,11 @@ import {
 const Dashboard = () => {
   const [room, setRoom] = useState();
   const [cooldown, setCooldown] = useState(0);
-  const [coolErr, setCoolErr] = useState("");
+  const [coolErr, setCoolErr] = useState();
 
   const coolTimer = cd => {
     cd = Math.ceil(cd);
-    console.log(cd);
+
     setCooldown(cd);
     let interval = setInterval(() => {
       console.log("cooldown: ", cd);
@@ -40,25 +40,30 @@ const Dashboard = () => {
   };
 
   const move = way => {
+    console.log("way", way);
     axios
       .post(
         move_url,
         { direction: way },
         {
           headers: {
-            Authorization: "Token e91091807dc50e6bf25669440c1b4fc3ebaf2aaa"
+            Authorization: "Token e79b12bf4f51c748e9edf3b395ad368c91c89ced"
           }
         }
       )
       .then(res => {
+        console.log(res.data);
         setRoom(res.data);
+        coolTimer(res.data.cooldown);
+        setCoolErr("");
       })
       .catch(err => {
         console.log("in catch", err.response);
         let cd = err.response.data.cooldown;
-        const coolErr = err.response.data.cooldown.errors;
+        // const coolErr = err.response.data.cooldown.errors;
         coolTimer(cd);
-        setCoolErr(coolErr);
+        setCoolErr(err.response);
+        console.log(coolErr);
       });
   };
 
@@ -66,7 +71,7 @@ const Dashboard = () => {
     axios
       .get(room_url, {
         headers: {
-          Authorization: "Token e91091807dc50e6bf25669440c1b4fc3ebaf2aaa"
+          Authorization: "Token e79b12bf4f51c748e9edf3b395ad368c91c89ced"
         }
       })
       .then(res => {
@@ -76,10 +81,10 @@ const Dashboard = () => {
       .catch(err => {
         console.log(err.response);
         let cd = err.response.data.cooldown;
-        const coolErr = err.response.data.cooldown.errors;
-        // setCooldown(cd)
+        // const coolErr = err.response.data.cooldown.errors;
+        setCooldown(cd);
         coolTimer(cd);
-        setCoolErr(coolErr);
+        setCoolErr(err.response);
       });
   };
 
@@ -156,7 +161,7 @@ const Dashboard = () => {
             <StatsCard
               bigIcon={<i className="pe-7s-shield text-primary" />}
               statsText="Footwear"
-              statsValue={cooldown}
+              statsValue="None"
               statsIcon={<i className="fa fa-refresh" />}
               statsIconText="Update"
             />
@@ -167,6 +172,7 @@ const Dashboard = () => {
           room={room}
           getRoom={getRoom}
           cooldown={cooldown}
+          coolErr={coolErr}
         />
 
         <Row>

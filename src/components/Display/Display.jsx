@@ -23,12 +23,12 @@ const Display = props => {
                   <Col md={6}>
                     <h3>{`You enter the room and notice ${props.room.exits.length} doors in the following directions...`}</h3>
                     <h4>
-                      {props.cooldown > 0 ? (
+                      {props.coolErr && props.cooldown > 0 ? (
                         <div>
                           <h4>
                             There doesn't seem to be an exit in that direction
                             <br />
-                            Cooldown + 5
+                            Cooldown Increased
                           </h4>
                         </div>
                       ) : (
@@ -54,12 +54,14 @@ const Display = props => {
                       stats="filler"
                       category={
                         props.room.items.length
-                          ? props.room.items.map(item => <p>{item}</p>)
+                          ? props.room.items.map(item => (
+                              <div key={item}>{item}</div>
+                            ))
                           : "There doesn't seem to be any items in this room."
                       }
                       content={
                         <>
-                          <div class="exits"></div>
+                          <div className="exits"></div>
                         </>
                       }
                     />
@@ -97,7 +99,7 @@ const Display = props => {
                 <button
                   onClick={() => props.move("n")}
                   type="button"
-                  class="btn btn-primary btn-md"
+                  className="btn btn-primary btn-md"
                 >
                   <i className="fa fa-angle-double-up fa-2x" />
                 </button>
@@ -115,7 +117,7 @@ const Display = props => {
                     marginRight: "5px"
                   }}
                   type="button"
-                  class="btn btn-primary btn-md"
+                  className="btn btn-primary btn-md"
                 >
                   <i className="fa fa-angle-double-left fa-2x" />
                 </button>
@@ -126,7 +128,7 @@ const Display = props => {
                     marginLeft: "5px"
                   }}
                   type="button"
-                  class="btn btn-primary btn-md"
+                  className="btn btn-primary btn-md"
                 >
                   <i className="fa fa-angle-double-right fa-2x" />
                 </button>
@@ -141,7 +143,7 @@ const Display = props => {
                 <button
                   onClick={() => props.move("s")}
                   type="button"
-                  class="btn btn-primary btn-md"
+                  className="btn btn-primary btn-md"
                 >
                   <i className="fa fa-angle-double-down fa-2x" />
                 </button>

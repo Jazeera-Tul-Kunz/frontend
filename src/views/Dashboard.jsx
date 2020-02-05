@@ -40,7 +40,6 @@ const Dashboard = () => {
   };
 
   const move = way => {
-    console.log("move clicked");
     axios
       .post(
         move_url,
@@ -52,7 +51,6 @@ const Dashboard = () => {
         }
       )
       .then(res => {
-        console.log("in then", res.data);
         setRoom(res.data);
       })
       .catch(err => {
@@ -100,7 +98,7 @@ const Dashboard = () => {
           </Col>
           <Col lg={3} sm={6}>
             <StatsCard
-              bigIcon={<i className="pe-7s-help2 text-warning" />}
+              bigIcon={<i className="pe-7s-cash text-success" />}
               statsText="Gold"
               statsValue="345"
               statsIcon={<i className="fa fa-refresh" />}
@@ -118,8 +116,46 @@ const Dashboard = () => {
           </Col>
           <Col lg={3} sm={6}>
             <StatsCard
-              bigIcon={<i className="pe-7s-clock text-info" />}
+              bigIcon={<i className="pe-7s-hourglass text-info" />}
               statsText="Cooldown"
+              statsValue={cooldown}
+              statsIcon={<i className="fa fa-refresh" />}
+              statsIconText="Update"
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={3} sm={6}>
+            <StatsCard
+              bigIcon={<i className="pe-7s-anchor text-danger" />}
+              statsText="Encumbrance"
+              statsValue="10"
+              statsIcon={<i className="fa fa-refresh" />}
+              statsIconText="Update"
+            />
+          </Col>
+          <Col lg={3} sm={6}>
+            <StatsCard
+              bigIcon={<i className="pe-7s-clock text-info" />}
+              statsText="Speed"
+              statsValue="8"
+              statsIcon={<i className="fa fa-refresh" />}
+              statsIconText="Update"
+            />
+          </Col>
+          <Col lg={3} sm={6}>
+            <StatsCard
+              bigIcon={<i className="pe-7s-shield text-primary" />}
+              statsText="Body Armor"
+              statsValue="None"
+              statsIcon={<i className="fa fa-refresh" />}
+              statsIconText="Update"
+            />
+          </Col>
+          <Col lg={3} sm={6}>
+            <StatsCard
+              bigIcon={<i className="pe-7s-shield text-primary" />}
+              statsText="Footwear"
               statsValue={cooldown}
               statsIcon={<i className="fa fa-refresh" />}
               statsIconText="Update"

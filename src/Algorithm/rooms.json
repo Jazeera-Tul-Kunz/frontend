@@ -13,9 +13,11 @@
       "s",
       "w"
     ],
-    "cooldown": 1,
+    "cooldown": 15,
     "errors": [],
-    "messages": []
+    "messages": [
+      "You have walked east."
+    ]
   },
   "252": {
     "room_id": 252,
@@ -53,7 +55,29 @@
     "cooldown": 15,
     "errors": [],
     "messages": [
-      "You have walked north."
+      "You have walked east."
+    ]
+  },
+  "302": {
+    "room_id": 302,
+    "title": "A Dark Cave",
+    "description": "You are standing in a dark cave.",
+    "coordinates": "(55,70)",
+    "elevation": 0,
+    "terrain": "TRAP",
+    "players": [],
+    "items": [
+      "shiny treasure"
+    ],
+    "exits": [
+      "n",
+      "s"
+    ],
+    "cooldown": 45,
+    "errors": [],
+    "messages": [
+      "You have walked south.",
+      "It's a trap!: +30s CD"
     ]
   },
   "303": {
@@ -64,7 +88,9 @@
     "elevation": 0,
     "terrain": "CAVE",
     "players": [],
-    "items": [],
+    "items": [
+      "small treasure"
+    ],
     "exits": [
       "n",
       "e",
@@ -73,7 +99,7 @@
     "cooldown": 15,
     "errors": [],
     "messages": [
-      "You have walked west."
+      "You have walked east."
     ]
   },
   "405": {
@@ -95,6 +121,197 @@
     "errors": [],
     "messages": [
       "You have walked west."
+    ]
+  },
+  "406": {
+    "room_id": 406,
+    "title": "A Dark Cave",
+    "description": "You are standing in a dark cave.",
+    "coordinates": "(53,70)",
+    "elevation": 0,
+    "terrain": "CAVE",
+    "players": [],
+    "items": [
+      "small treasure"
+    ],
+    "exits": [
+      "s",
+      "w"
+    ],
+    "cooldown": 15,
+    "errors": [],
+    "messages": [
+      "You have walked east."
+    ]
+  },
+  "415": {
+    "room_id": 415,
+    "title": "A Dark Cave",
+    "description": "You are standing in a dark cave.",
+    "coordinates": "(52,70)",
+    "elevation": 0,
+    "terrain": "TRAP",
+    "players": [],
+    "items": [
+      "small treasure"
+    ],
+    "exits": [
+      "e",
+      "w"
+    ],
+    "cooldown": 45,
+    "errors": [],
+    "messages": [
+      "You have walked east.",
+      "It's a trap!: +30s CD"
+    ]
+  },
+  "418": {
+    "room_id": 418,
+    "title": "A Dark Cave",
+    "description": "You are standing in a dark cave.",
+    "coordinates": "(51,70)",
+    "elevation": 0,
+    "terrain": "CAVE",
+    "players": [],
+    "items": [
+      "small treasure"
+    ],
+    "exits": [
+      "n",
+      "s",
+      "e"
+    ],
+    "cooldown": 15,
+    "errors": [],
+    "messages": [
+      "You have walked south."
+    ]
+  },
+  "422": {
+    "room_id": 422,
+    "title": "A Dark Cave",
+    "description": "You are standing in a dark cave.",
+    "coordinates": "(55,71)",
+    "elevation": 0,
+    "terrain": "TRAP",
+    "players": [],
+    "items": [
+      "shiny treasure",
+      "small treasure"
+    ],
+    "exits": [
+      "n",
+      "s"
+    ],
+    "cooldown": 45,
+    "errors": [],
+    "messages": [
+      "You have walked north.",
+      "It's a trap!: +30s CD"
+    ]
+  },
+  "425": {
+    "room_id": 425,
+    "title": "A Dark Cave",
+    "description": "You are standing in a dark cave.",
+    "coordinates": "(51,71)",
+    "elevation": 0,
+    "terrain": "CAVE",
+    "players": [],
+    "items": [
+      "small treasure"
+    ],
+    "exits": [
+      "s",
+      "w"
+    ],
+    "cooldown": 15,
+    "errors": [],
+    "messages": [
+      "You have walked east."
+    ]
+  },
+  "426": {
+    "room_id": 426,
+    "title": "A Dark Cave",
+    "description": "You are standing in a dark cave.",
+    "coordinates": "(55,72)",
+    "elevation": 0,
+    "terrain": "TRAP",
+    "players": [],
+    "items": [],
+    "exits": [
+      "n",
+      "s"
+    ],
+    "cooldown": 45,
+    "errors": [],
+    "messages": [
+      "You have walked north.",
+      "It's a trap!: +30s CD"
+    ]
+  },
+  "457": {
+    "room_id": 457,
+    "title": "A Dark Cave",
+    "description": "You are standing in a dark cave.",
+    "coordinates": "(55,73)",
+    "elevation": 0,
+    "terrain": "TRAP",
+    "players": [],
+    "items": [
+      "shiny treasure"
+    ],
+    "exits": [
+      "n",
+      "s"
+    ],
+    "cooldown": 45,
+    "errors": [],
+    "messages": [
+      "You have walked north.",
+      "It's a trap!: +30s CD"
+    ]
+  },
+  "469": {
+    "room_id": 469,
+    "title": "A Dark Cave",
+    "description": "You are standing in a dark cave.",
+    "coordinates": "(50,71)",
+    "elevation": 0,
+    "terrain": "CAVE",
+    "players": [],
+    "items": [
+      "tiny treasure"
+    ],
+    "exits": [
+      "e"
+    ],
+    "cooldown": 15,
+    "errors": [],
+    "messages": [
+      "You have walked west."
+    ]
+  },
+  "474": {
+    "room_id": 474,
+    "title": "A Dark Cave",
+    "description": "You are standing in a dark cave.",
+    "coordinates": "(51,69)",
+    "elevation": 0,
+    "terrain": "CAVE",
+    "players": [],
+    "items": [
+      "shiny treasure"
+    ],
+    "exits": [
+      "n"
+    ],
+    "cooldown": 15,
+    "errors": [],
+    "messages": [
+      "You have walked south."
     ]
   }
 }

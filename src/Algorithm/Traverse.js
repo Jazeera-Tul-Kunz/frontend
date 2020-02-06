@@ -2,10 +2,7 @@ require('dotenv').config();
 const axiosAuth = require('../utils/axiosAuth');
 const token = process.env.API_KEY;
 console.log('token', token);
-// const os = require('os');
-// const fs = require('fs-extra');
 const fs = require('fs');
-
 
 class Traverse {
     constructor() {
@@ -22,11 +19,7 @@ class Traverse {
         try {
             const res =  await axiosAuth(token).get('/init');
             const room = res.data;
-            // console.log('room', room);
-            // this.graph[room.room_id] = [room.cooldown,...room.exits];
             this.graph[room.room_id] = room;
-            // console.log('graph', this.graph);
-            // fs.writeFile('./rooms.json',this.graph[room.room_id], err => {if (err) throw err})
             fs.writeFile('./rooms.json',JSON.stringify(this.graph,null,2), err => {if (err) throw err})
             return [room.cooldown, room.exits]
         } catch(err) {
@@ -35,7 +28,7 @@ class Traverse {
     }
 
     trackInit = async () => {
-        const [cooldown,exits] = await this.start();
+        const [cooldown,exits,id] = await this.start();
         const rand = Math.floor(Math.random()*exits.length);
         return [cooldown,exits[rand]]
     }
@@ -45,12 +38,9 @@ class Traverse {
         try {
             return this.wait(cooldown).then( async (res) => {
                 console.log(res);
-                const [cool,exits] = await this.explore(way);
-                console.log('coolexits in traverse', cool,exits)
-                // const explored = await t.explore(way);
-                // console.log('explored', explored);
+                const [cool,exits,id] = await this.explore(way);
+                // console.log('coolexits in traverse', cool,exits)
                 const rand = Math.floor(Math.random()*exits.length);
-                // return [cool,exits[rand]];
                 return [cool,exits[rand]];
             })
         }
@@ -63,17 +53,17 @@ class Traverse {
         try {
             const res = await axiosAuth(token).post('/move',{direction : way})
             const room = res.data;
-            this.graph[room.room_id] = [room.cooldown,...room.exits];
+
             this.graph[room.room_id] = room;
         
             fs.writeFile('./rooms.json',JSON.stringify(this.graph,null,2), err => {if (err) throw err })
 
-            console.log('graph in explore', this.graph)
-            return [room.cooldown, room.exits]
+            // console.log('graph in explore', this.graph)
+            return [room.cooldown, room.exits, room.room_id]
         } catch(err) {
-            // if (err.response) {
-            console.log(err.response.data);
-            // }
+            if (err.response) {
+                console.log(err.response.data);
+            }
         }
     }
 }
@@ -82,69 +72,45 @@ const t = new Traverse()
 
 async function wrap() {
     let coolexit = await t.trackInit();
-    for (let i=0; i<10; i++) {
+
+    while (Object.keys(t.graph).length <= 500) {
         const nextCE = await t.getTrack(coolexit);
         coolexit = nextCE;
+        console.log('rooms traversed: ', Object.keys(t.graph).length)
     }
 }
 wrap();
 
-
- // .then(() => {
-    //     t.explore(way)
-    //     .then(res => console.log(res))
-    //     .catch(err => console.log(err))
-    // })
-    // .catch(err => {
-    //     console.log(err);
-    // })
-
-    // const promise = new Promise((resolve,reject) => {
-    //     setTimeout(async () => {
-    //         try {
-    //             const [cool,exits] = await t.explore(way)
-    //             const rand = Math.floor(Math.random()*exits.length);
-    //             resolve([cool,exits[rand]])
-    //         } catch(err) {
-    //             console.log('t.explore() err',err)
-    //         }
+    // flip_way = (جهة) => {
+    //     if (جهة == 'n') {
+    //         const عكس = 's' 
+    //     }
+       
+    //     if (جهة == 's') {
+    //         const عكس = 'n';
+    //     }
+           
+    //     if (جهة == 'e') {
+    //         const عكس = 'w'
+    //     }
             
-    //     },cooldown*1000)
-    // })
+    //     if (جهة == 'w') {
+    //         const عكس = 'e'
+    //     }
+    //     return عكس
+    // } 
 
+    // update_rooms = (way,old_room,new_room=None)=> {
+    //     if (!new_room) {
+    //         this.graph[old_room.id][way] = null;
+    //         return this.graph[old_room.id]
+    //     }
+        
+    //     else {
+    //         this.graph[old_room.id][way] = new_room.id;
+    //         const flip = this.flip_way(way);
+    //         this.graph[new_room.id][flip] = old_room.id;
+    //         return [this.graph[old_room.id],self.graph[new_room.id]]
+    //     }
 
-
-// const wait = seconds => {
-//     console.log('seconds', seconds);
-//     let makeMS = seconds * 1000;
-//     return new Promise((resolve, reject) => setTimeout(() => resolve('time to move!'),makeMS));
-//   };
-
-
-// const begin = async () => {
-//         const [cooldown,exits] = await t.start();
-//         const rand = Math.floor(Math.random()*exits.length);
-//         return [cooldown,exits[rand]]
-// }
-
-// const traverse = ([cooldown,way]) => {
-//     console.log('cooldown','way',cooldown,way);
-//     try {
-//         return wait(cooldown).then( async (res) => {
-//             console.log(res);
-//             const [cool,exits] = await t.explore(way);
-//             console.log('coolexits in traverse', cool,exits)
-//             // const explored = await t.explore(way);
-//             // console.log('explored', explored);
-//             const rand = Math.floor(Math.random()*exits.length);
-//             // return [cool,exits[rand]];
-//             return [cool,exits[rand]];
-//         })
-//     }
-//     catch(err) {
-//         console.log(err);
-//     }
-// }
-
-
-
+    // }

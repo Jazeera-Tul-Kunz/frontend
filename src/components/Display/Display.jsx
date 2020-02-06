@@ -57,7 +57,7 @@ const Display = props => {
                           ? props.room.items.map(item => (
                               <>
                                 <Button
-                                  // onClick={() => props.pickUp(item)}
+                                  onClick={() => props.getItem(item)}
                                   style={{
                                     marginBottom: "2px",
                                     marginTop: "5px"

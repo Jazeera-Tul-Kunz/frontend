@@ -129,9 +129,35 @@ const Dashboard = () => {
       });
   };
 
+  const dropItem = item => {
+    axios
+      .post(
+        dropItem_url,
+        { name: item },
+        {
+          headers: {
+            Authorization: "Token e79b12bf4f51c748e9edf3b395ad368c91c89ced"
+          }
+        }
+      )
+      .then(res => {
+        console.log("dropItem res.data", res.data);
+        setStatus(res.data);
+        coolTimer(res.data.cooldown);
+      })
+      .catch(err => {
+        console.log(err);
+        let cd = err.response.data.cooldown;
+        // const coolErr = err.response.data.cooldown.errors;
+        setCooldown(cd);
+        coolTimer(cd);
+        setCoolErr(err.response);
+      });
+  };
+
   const getStatus = () => {
     axios
-      .post(getStatus_url, {
+      .post(getStatus_url, null, {
         headers: {
           Authorization: "Token e79b12bf4f51c748e9edf3b395ad368c91c89ced"
         }
@@ -154,7 +180,7 @@ const Dashboard = () => {
   useEffect(() => {
     getStatus();
     console.log("useEffect status", status);
-  }, []);
+  }, [room]);
 
   return (
     <div className="content">
@@ -182,7 +208,7 @@ const Dashboard = () => {
             <StatsCard
               bigIcon={<i className="pe-7s-box1 text-warning" />}
               statsText="Inventory"
-              statsValue={status.inventory.length}
+              statsValue={status.inventory.length ? status.inventory.length : 0}
               statsIcon={<i className="fa fa-refresh" />}
               statsIconText="Update"
             />
@@ -243,6 +269,7 @@ const Dashboard = () => {
           coolErr={coolErr}
           status={status}
           setStatus={setStatus}
+          getItem={getItem}
         />
 
         <Row>
@@ -255,21 +282,19 @@ const Dashboard = () => {
               statsIcon="fa fa-check"
               content={
                 status.inventory.length > 0 ? (
-                  <ul className="ct-chart">
-                    status.inventory.map(item =>{" "}
+                  status.inventory.map(item => (
                     <Button
+                      onClick={() => dropItem(item)}
                       style={{
-                        marginBottom: "2px",
-                        marginTop: "5px"
+                        margin: "5px"
                       }}
                       className="btn btn-warning btn-sm"
                     >
-                      item
+                      {item}
                     </Button>
-                    )
-                  </ul>
+                  ))
                 ) : (
-                  <h3>("Your inventory is currently empty.")</h3>
+                  <h3>"Your inventory is currently empty."</h3>
                 )
               }
             />

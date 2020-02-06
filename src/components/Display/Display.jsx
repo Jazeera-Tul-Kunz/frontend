@@ -55,12 +55,20 @@ const Display = props => {
                       category={
                         props.room.items.length
                           ? props.room.items.map(item => (
-                              <Button
-                                className="btn btn-primary btn-md"
-                                key={item}
-                              >
-                                {`Pick up ${item}`}
-                              </Button>
+                              <>
+                                <Button
+                                  // onClick={() => props.pickUp(item)}
+                                  style={{
+                                    marginBottom: "2px",
+                                    marginTop: "5px"
+                                  }}
+                                  className="btn btn-warning btn-sm"
+                                  key={item}
+                                >
+                                  {`Pick up ${item}`}
+                                </Button>
+                                <br />
+                              </>
                             ))
                           : "There doesn't seem to be any items in this room."
                       }

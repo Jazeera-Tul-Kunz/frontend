@@ -578,6 +578,10 @@ var legendBar = {
 
 const move_url = "https://lambda-treasure-hunt.herokuapp.com/api/adv/move/";
 const room_url = "https://lambda-treasure-hunt.herokuapp.com/api/adv/init/";
+const getItem_url = "https://lambda-treasure-hunt.herokuapp.com/api/adv/take/";
+const dropItem_url = "https://lambda-treasure-hunt.herokuapp.com/api/adv/drop/";
+const getStatus_url =
+  "https://lambda-treasure-hunt.herokuapp.com/api/adv/status/";
 
 module.exports = {
   style, // For notifications (App container and Notifications view)
@@ -595,5 +599,8 @@ module.exports = {
   responsiveBar,
   legendBar, // For charts (Dashboard view)
   move_url,
-  room_url
+  room_url,
+  getItem_url,
+  dropItem_url,
+  getStatus_url
 };

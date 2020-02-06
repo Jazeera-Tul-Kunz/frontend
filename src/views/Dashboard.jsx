@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ChartistGraph from "react-chartist";
-import { Grid, Row, Col } from "react-bootstrap";
+import { Grid, Row, Col, Button } from "react-bootstrap";
 import Display from "../components/Display/Display";
 import axios from "axios";
 
@@ -19,13 +19,30 @@ import {
   responsiveBar,
   legendBar,
   move_url,
-  room_url
+  room_url,
+  getItem_url,
+  dropItem_url,
+  getStatus_url
 } from "variables/Variables.jsx";
 
 const Dashboard = () => {
   const [room, setRoom] = useState();
   const [cooldown, setCooldown] = useState(0);
   const [coolErr, setCoolErr] = useState();
+  const [status, setStatus] = useState({
+    name: "",
+    cooldown: 0,
+    encumbrance: 0, // How much are you carrying?
+    strength: 0, // How much can you carry?
+    speed: 0, // How fast do you travel?
+    gold: 0,
+    bodywear: "None",
+    footwear: "None",
+    inventory: [],
+    status: [],
+    errors: [],
+    messages: []
+  });
 
   const coolTimer = cd => {
     cd = Math.ceil(cd);
@@ -86,6 +103,59 @@ const Dashboard = () => {
       });
   };
 
+  const getItem = item => {
+    axios
+      .post(
+        getItem_url,
+        { name: item },
+        {
+          headers: {
+            Authorization: "Token e79b12bf4f51c748e9edf3b395ad368c91c89ced"
+          }
+        }
+      )
+      .then(res => {
+        console.log("getItem res.data", res.data);
+        setRoom(res.data);
+        coolTimer(res.data.cooldown);
+      })
+      .catch(err => {
+        console.log(err.response);
+        let cd = err.response.data.cooldown;
+        // const coolErr = err.response.data.cooldown.errors;
+        setCooldown(cd);
+        coolTimer(cd);
+        setCoolErr(err.response);
+      });
+  };
+
+  const getStatus = () => {
+    axios
+      .post(getStatus_url, {
+        headers: {
+          Authorization: "Token e79b12bf4f51c748e9edf3b395ad368c91c89ced"
+        }
+      })
+      .then(res => {
+        console.log("getStatus res.data", res.data);
+        setStatus(res.data);
+        coolTimer(res.data.cooldown);
+      })
+      .catch(err => {
+        console.log(err.response);
+        let cd = err.response.data.cooldown;
+        // const coolErr = err.response.data.cooldown.errors;
+        setCooldown(cd);
+        coolTimer(cd);
+        setCoolErr(err.response);
+      });
+  };
+
+  useEffect(() => {
+    getStatus();
+    console.log("useEffect status", status);
+  }, []);
+
   return (
     <div className="content">
       <Grid fluid>
@@ -94,7 +164,7 @@ const Dashboard = () => {
             <StatsCard
               bigIcon={<i className="pe-7s-gym text-danger" />}
               statsText="Strength"
-              statsValue="10"
+              statsValue={status.strength}
               statsIcon={<i className="fa fa-refresh" />}
               statsIconText="Update"
             />
@@ -103,7 +173,7 @@ const Dashboard = () => {
             <StatsCard
               bigIcon={<i className="pe-7s-cash text-success" />}
               statsText="Gold"
-              statsValue="345"
+              statsValue={status.gold}
               statsIcon={<i className="fa fa-refresh" />}
               statsIconText="Update"
             />
@@ -112,7 +182,7 @@ const Dashboard = () => {
             <StatsCard
               bigIcon={<i className="pe-7s-box1 text-warning" />}
               statsText="Inventory"
-              statsValue="5"
+              statsValue={status.inventory.length}
               statsIcon={<i className="fa fa-refresh" />}
               statsIconText="Update"
             />
@@ -132,7 +202,7 @@ const Dashboard = () => {
             <StatsCard
               bigIcon={<i className="pe-7s-anchor text-danger" />}
               statsText="Encumbrance"
-              statsValue="10"
+              statsValue={status.encumbrance}
               statsIcon={<i className="fa fa-refresh" />}
               statsIconText="Update"
             />
@@ -141,7 +211,7 @@ const Dashboard = () => {
             <StatsCard
               bigIcon={<i className="pe-7s-clock text-info" />}
               statsText="Speed"
-              statsValue="8"
+              statsValue={status.speed}
               statsIcon={<i className="fa fa-refresh" />}
               statsIconText="Update"
             />
@@ -150,7 +220,7 @@ const Dashboard = () => {
             <StatsCard
               bigIcon={<i className="pe-7s-shield text-primary" />}
               statsText="Body Armor"
-              statsValue="None"
+              statsValue={status.bodywear}
               statsIcon={<i className="fa fa-refresh" />}
               statsIconText="Update"
             />
@@ -159,7 +229,7 @@ const Dashboard = () => {
             <StatsCard
               bigIcon={<i className="pe-7s-shield text-primary" />}
               statsText="Footwear"
-              statsValue="None"
+              statsValue={status.footwear}
               statsIcon={<i className="fa fa-refresh" />}
               statsIconText="Update"
             />
@@ -171,6 +241,8 @@ const Dashboard = () => {
           getRoom={getRoom}
           cooldown={cooldown}
           coolErr={coolErr}
+          status={status}
+          setStatus={setStatus}
         />
 
         <Row>
@@ -181,7 +253,25 @@ const Dashboard = () => {
               category="List of carried items"
               stats="Data information certified"
               statsIcon="fa fa-check"
-              content={<div className="ct-chart">INVENTORY HERE</div>}
+              content={
+                status.inventory.length > 0 ? (
+                  <ul className="ct-chart">
+                    status.inventory.map(item =>{" "}
+                    <Button
+                      style={{
+                        marginBottom: "2px",
+                        marginTop: "5px"
+                      }}
+                      className="btn btn-warning btn-sm"
+                    >
+                      item
+                    </Button>
+                    )
+                  </ul>
+                ) : (
+                  <h3>("Your inventory is currently empty.")</h3>
+                )
+              }
             />
           </Col>
 

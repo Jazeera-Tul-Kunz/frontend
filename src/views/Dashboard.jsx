@@ -180,7 +180,7 @@ const Dashboard = () => {
   useEffect(() => {
     getStatus();
     console.log("useEffect status", status);
-  }, [room]);
+  }, []);
 
   return (
     <div className="content">

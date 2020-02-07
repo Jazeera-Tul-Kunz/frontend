@@ -1,29 +1,32 @@
 import React, { useEffect, useState } from "react";
-import ChartistGraph from "react-chartist";
+// import ChartistGraph from "react-chartist";
 import { Grid, Row, Col, Button } from "react-bootstrap";
 import Display from "../components/Display/Display";
 import axios from "axios";
-
+// import axiosAuth from '../utils/axiosAuth';
 import { Card } from "components/Card/Card.jsx";
 import { StatsCard } from "components/StatsCard/StatsCard.jsx";
 import { Tasks } from "components/Tasks/Tasks.jsx";
-import {
-  dataPie,
-  legendPie,
-  dataSales,
-  optionsSales,
-  responsiveSales,
-  legendSales,
-  dataBar,
-  optionsBar,
-  responsiveBar,
-  legendBar,
-  move_url,
-  room_url,
-  getItem_url,
-  dropItem_url,
-  getStatus_url
-} from "variables/Variables.jsx";
+const axiosAuth = require('../utils/axiosAuth')
+// import {
+  // dataPie,
+  // legendPie,
+  // dataSales,
+  // optionsSales,
+  // responsiveSales,
+  // legendSales,
+  // dataBar,
+  // optionsBar,
+  // responsiveBar,
+  // legendBar,
+  // move_url,
+  // room_url,
+  // getItem_url,
+  // dropItem_url,
+  // getStatus_url
+// } from "variables/Variables.jsx";
+
+let interval;  //required to be declared globally to clear the interval whenever coolTimer() called.  
 
 const Dashboard = () => {
   const [room, setRoom] = useState();
@@ -45,10 +48,9 @@ const Dashboard = () => {
   });
 
   const coolTimer = cd => {
-    cd = Math.ceil(cd);
-
-    setCooldown(cd);
-    let interval = setInterval(() => {
+    clearInterval(interval);
+    setCooldown(Math.ceil(cd));
+    interval = setInterval(() => {
       console.log("cooldown: ", cd);
       cd -= 1;
       setCooldown(lastcool => lastcool - 1);
@@ -57,16 +59,8 @@ const Dashboard = () => {
   };
 
   const move = way => {
-    axios
-      .post(
-        move_url,
-        { direction: way },
-        {
-          headers: {
-            Authorization: "Token e79b12bf4f51c748e9edf3b395ad368c91c89ced"
-          }
-        }
-      )
+
+    axiosAuth().post('/move',{direction: way})
       .then(res => {
         console.log(res.data);
         setRoom(res.data);
@@ -78,103 +72,78 @@ const Dashboard = () => {
         // const coolErr = err.response.data.cooldown.errors;
         coolTimer(cd);
         setCoolErr(err.response);
-        console.log(coolErr);
       });
   };
 
   const getRoom = () => {
-    axios
-      .get(room_url, {
-        headers: {
-          Authorization: "Token e79b12bf4f51c748e9edf3b395ad368c91c89ced"
-        }
-      })
-      .then(res => {
-        console.log(res.data);
-        setRoom(res.data);
-      })
-      .catch(err => {
-        console.log(err.response);
-        let cd = err.response.data.cooldown;
-        // const coolErr = err.response.data.cooldown.errors;
-        setCooldown(cd);
-        coolTimer(cd);
-        setCoolErr(err.response);
-      });
+
+    axiosAuth().get('/init')
+        .then(res => {
+          console.log(res.data);
+          setRoom(res.data);
+        })
+        .catch(err => {
+          console.log(err.response);
+          let cd = err.response.data.cooldown;
+          // const coolErr = err.response.data.cooldown.errors;
+          // setCooldown(cd);
+          coolTimer(cd);
+          setCoolErr(err.response);
+        });
   };
 
   const getItem = item => {
-    axios
-      .post(
-        getItem_url,
-        { name: item },
-        {
-          headers: {
-            Authorization: "Token e79b12bf4f51c748e9edf3b395ad368c91c89ced"
-          }
-        }
-      )
-      .then(res => {
-        console.log("getItem res.data", res.data);
-        setRoom(res.data);
-        coolTimer(res.data.cooldown);
-      })
-      .catch(err => {
-        console.log(err.response);
-        let cd = err.response.data.cooldown;
-        // const coolErr = err.response.data.cooldown.errors;
-        setCooldown(cd);
-        coolTimer(cd);
-        setCoolErr(err.response);
-      });
+
+    axiosAuth().post('/take',{name: item})
+        .then(res => {
+          console.log("getItem res.data", res.data);
+          setRoom(res.data);
+          coolTimer(res.data.cooldown);
+        })
+        .catch(err => {
+          console.log(err.response);
+          let cd = err.response.data.cooldown;
+          // const coolErr = err.response.data.cooldown.errors;
+          // setCooldown(cd);
+          coolTimer(cd);
+          setCoolErr(err.response);
+        });
   };
 
   const dropItem = item => {
-    axios
-      .post(
-        dropItem_url,
-        { name: item },
-        {
-          headers: {
-            Authorization: "Token e79b12bf4f51c748e9edf3b395ad368c91c89ced"
-          }
-        }
-      )
-      .then(res => {
-        console.log("dropItem res.data", res.data);
-        setStatus(res.data);
-        coolTimer(res.data.cooldown);
-      })
-      .catch(err => {
-        console.log(err);
-        let cd = err.response.data.cooldown;
-        // const coolErr = err.response.data.cooldown.errors;
-        setCooldown(cd);
-        coolTimer(cd);
-        setCoolErr(err.response);
-      });
+
+    axiosAuth().post('/drop',{name: item})
+          .then(res => {
+            console.log("dropItem res.data", res.data);
+            setStatus(res.data);
+            coolTimer(res.data.cooldown);
+          })
+          .catch(err => {
+            console.log(err);
+            let cd = err.response.data.cooldown;
+            // const coolErr = err.response.data.cooldown.errors;
+            // setCooldown(cd);
+            coolTimer(cd);
+            setCoolErr(err.response);
+          });
   };
 
   const getStatus = () => {
-    axios
-      .post(getStatus_url, null, {
-        headers: {
-          Authorization: "Token e79b12bf4f51c748e9edf3b395ad368c91c89ced"
-        }
-      })
-      .then(res => {
-        console.log("getStatus res.data", res.data);
-        setStatus(res.data);
-        coolTimer(res.data.cooldown);
-      })
-      .catch(err => {
-        console.log(err.response);
-        let cd = err.response.data.cooldown;
-        // const coolErr = err.response.data.cooldown.errors;
-        setCooldown(cd);
-        coolTimer(cd);
-        setCoolErr(err.response);
-      });
+
+    axiosAuth().post('/status',null)
+        .then(res => {
+          console.log("getStatus res.data", res.data);
+          setStatus(res.data);
+          coolTimer(res.data.cooldown);
+        })
+        .catch(err => {
+          console.log(err.response);
+          let cd = err.response.data.cooldown;
+          // const coolErr = err.response.data.cooldown.errors;
+          // setCooldown(cd);
+          coolTimer(cd);
+          setCoolErr(err.response);
+        });
   };
 
   useEffect(() => {

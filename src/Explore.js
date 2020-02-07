@@ -5,6 +5,7 @@ import Navi from './Navi';
 import Room from './Room';
 import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 const axiosAuth = require('./utils/axiosAuth');
+let interval;
 
 export default function Explore() {
     const [room,setRoom] = useState();
@@ -13,15 +14,18 @@ export default function Explore() {
     const [explored, setExplored] = useState([])
     const [modal, setModal] = useState(false);
 
-    const coolTimer = (cd) => {
-        cd = Math.ceil(cd);
-        console.log(cd);
-        setCooldown(cd);
-        let interval = setInterval(() => {
+    const coolTimer = async (cd) => {
+        console.log('interval in coolTimer', interval);
+        clearInterval(interval);
+        setCooldown(Math.ceil(cd));
+        interval = await setInterval(() => {
             console.log('cooldown remaining: ', cd);
             cd -= 1;
             setCooldown(lastcool => lastcool-1);
-            if (cd <= 0) clearInterval(interval);
+            if (cd <= 0) {
+                clearInterval(interval)
+                setTimer(false)
+            };
         },1000)
     }
 

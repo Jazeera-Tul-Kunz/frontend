@@ -3,6 +3,12 @@ import { Grid, Row, Col, Button } from "react-bootstrap";
 import { Card } from "../Card/Card";
 
 const Display = props => {
+  console.log("props", props);
+  const checkValidDir = dir => {
+    if (props.room && props.room.exits.includes(dir)) {
+      props.move(dir);
+    }
+  };
   return (
     <Row>
       <Col md={8}>
@@ -10,11 +16,20 @@ const Display = props => {
           statsIcon="fa fa-history"
           id="GameDisplay"
           title={
-            props.room === undefined
-              ? "Move in a direction to start."
-              : props.room && `Current Room: ${props.room.title}`
+            props.room === undefined ? (
+              <Button
+                onClick={() => props.getRoom()}
+                className="btn btn-success btn-lg btn-block"
+              >
+                PLAY
+              </Button>
+            ) : (
+              props.room && `Current Cooldown: ${props.cooldown}`
+            )
           }
-          category=""
+          category={
+            props.room === undefined ? "" : "TIP: ALL ACTIONS INCREASE COOLDOWN"
+          }
           stats={props.room && `Room ID: ${props.room.room_id}`}
           content={
             <div className="ct-chart">
@@ -36,7 +51,7 @@ const Display = props => {
                     <Card
                       id="RoomDescription"
                       statsIcon="fa fa-history"
-                      title="Room Description"
+                      title={props.room ? props.room.title : ""}
                       stats="filler"
                       category=""
                       content={
@@ -54,16 +69,16 @@ const Display = props => {
                       stats="filler"
                       category={
                         props.room.items.length
-                          ? props.room.items.map(item => (
+                          ? props.room.items.map((item, i) => (
                               <>
                                 <Button
+                                  key={i}
                                   onClick={() => props.getItem(item)}
                                   style={{
                                     marginBottom: "2px",
                                     marginTop: "5px"
                                   }}
                                   className="btn btn-warning btn-sm"
-                                  key={item}
                                 >
                                   {`Pick up ${item}`}
                                 </Button>
@@ -82,7 +97,7 @@ const Display = props => {
                 </Row>
               )}
 
-              {props.cooldown > 0 && props.room === undefined && (
+              {props.cooldown > 1 && props.room === undefined && (
                 <div>
                   <h4>
                     Too tired to move! Wait for the cooldown counter to reach
@@ -110,7 +125,7 @@ const Display = props => {
                 }}
               >
                 <button
-                  onClick={() => props.move("n")}
+                  onClick={() => checkValidDir("n")}
                   type="button"
                   className="btn btn-primary btn-md"
                 >
@@ -125,7 +140,7 @@ const Display = props => {
                 }}
               >
                 <button
-                  onClick={() => props.move("w")}
+                  onClick={() => checkValidDir("w")}
                   style={{
                     marginRight: "5px"
                   }}
@@ -136,7 +151,7 @@ const Display = props => {
                 </button>
 
                 <button
-                  onClick={() => props.move("e")}
+                  onClick={() => checkValidDir("e")}
                   style={{
                     marginLeft: "5px"
                   }}
@@ -154,7 +169,7 @@ const Display = props => {
                 }}
               >
                 <button
-                  onClick={() => props.move("s")}
+                  onClick={() => checkValidDir("s")}
                   type="button"
                   className="btn btn-primary btn-md"
                 >

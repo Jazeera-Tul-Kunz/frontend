@@ -32,27 +32,35 @@ const Dashboard = () => {
   const [status, setStatus] = useState({
     name: "",
     cooldown: 0,
-    encumbrance: 0, // How much are you carrying?
-    strength: 0, // How much can you carry?
-    speed: 0, // How fast do you travel?
+    encumbrance: 0,
+    strength: 0,
+    speed: 0,
     gold: 0,
-    bodywear: "None",
-    footwear: "None",
+    bodywear: null,
+    footwear: null,
     inventory: [],
+    abilities: [],
     status: [],
+    has_mined: true,
     errors: [],
     messages: []
   });
 
-  const coolTimer = cd => {
-    cd = Math.ceil(cd);
+  let interval;
 
-    setCooldown(cd);
-    let interval = setInterval(() => {
-      console.log("cooldown: ", cd);
+  const coolTimer = async cd => {
+    console.log("interval in coolTimer", interval);
+    clearInterval(interval);
+    setCooldown(Math.ceil(cd));
+    interval = await setInterval(() => {
+      console.log("cooldown remaining: ", cd);
       cd -= 1;
       setCooldown(lastcool => lastcool - 1);
-      if (cd <= 0) clearInterval(interval);
+      if (cd <= 0) {
+        setCooldown(0);
+        clearInterval(interval);
+        // setTimer(false);
+      }
     }, 1000);
   };
 
@@ -118,6 +126,10 @@ const Dashboard = () => {
         console.log("getItem res.data", res.data);
         setRoom(res.data);
         coolTimer(res.data.cooldown);
+        setStatus({
+          ...status,
+          inventory: [...status.inventory, item]
+        });
       })
       .catch(err => {
         console.log(err.response);
@@ -129,7 +141,7 @@ const Dashboard = () => {
       });
   };
 
-  const dropItem = item => {
+  const dropItem = (item, i) => {
     axios
       .post(
         dropItem_url,
@@ -142,7 +154,12 @@ const Dashboard = () => {
       )
       .then(res => {
         console.log("dropItem res.data", res.data);
-        setStatus(res.data);
+        setStatus({
+          ...status,
+          inventory: status.inventory.filter((it, ind) => {
+            return ind !== i ? it : false;
+          })
+        });
         coolTimer(res.data.cooldown);
       })
       .catch(err => {
@@ -179,7 +196,6 @@ const Dashboard = () => {
 
   useEffect(() => {
     getStatus();
-    console.log("useEffect status", status);
   }, []);
 
   return (
@@ -208,7 +224,11 @@ const Dashboard = () => {
             <StatsCard
               bigIcon={<i className="pe-7s-box1 text-warning" />}
               statsText="Inventory"
-              statsValue={status.inventory.length ? status.inventory.length : 0}
+              statsValue={
+                status.inventory && status.inventory.length
+                  ? status.inventory.length
+                  : 0
+              }
               statsIcon={<i className="fa fa-refresh" />}
               statsIconText="Update"
             />
@@ -282,9 +302,10 @@ const Dashboard = () => {
               statsIcon="fa fa-check"
               content={
                 status.inventory.length > 0 ? (
-                  status.inventory.map(item => (
+                  status.inventory.map((item, i) => (
                     <Button
-                      onClick={() => dropItem(item)}
+                      onClick={() => dropItem(item, i)}
+                      key={i}
                       style={{
                         margin: "5px"
                       }}

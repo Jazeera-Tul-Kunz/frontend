@@ -14,7 +14,7 @@ class Queue {
     }
 
     size() {
-        return this.queue.length;
+        return this.queue.linkedlist.length;
     }
 }
 
@@ -26,3 +26,6 @@ console.log(q);
 q.deque();
 q.deque();
 console.log(q);
+x = q.size();
+console.log(x);
+

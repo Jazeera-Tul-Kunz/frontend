@@ -7,7 +7,7 @@ class Node {
 }
 
 class LinkedList {
-    constructor(val) {
+    constructor(val=null) {
         this.linkedlist = [];
         this.head = new Node(val);
         this.linkedlist.push(this.head.value);
@@ -38,10 +38,13 @@ class LinkedList {
     }
 
     behead() {
-        console.log('head in behead', this.head);
         this.head.next.prev = null;
         this.head = this.head.next;
         return this.linkedlist.shift();
+    }
+
+    size() {
+        return this.linkedlist.length
     }
 
     print() {
@@ -52,6 +55,8 @@ class LinkedList {
         }
     }
 }
+
+module.exports = LinkedList;
 
 // ll = new LinkedList(10);
 

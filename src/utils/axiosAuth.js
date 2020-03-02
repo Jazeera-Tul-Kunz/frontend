@@ -10,7 +10,7 @@ function axiosAuth(token=process.env.REACT_APP_API_KEY) {
     console.log('token in axiosAuth', token);
     const config = {
         headers : {Authorization: `Token ${token}`},
-        baseURL: 'https://lambda-treasure-hunt.herokuapp.com/api/adv/'
+        baseURL: 'https://lambda-treasure-hunt.herokuapp.com/api/'
     }
     return axios.create(config)
 }

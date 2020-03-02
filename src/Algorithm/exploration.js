@@ -8,9 +8,10 @@ async function exploration() {
 
         // const x = await island.currentRoom();
         const {room_id, exits} = await island.currentRoom();
-        console.log(room_id,exits);
+        // console.log(room_id,exits);
         island.loadRoom(room_id,exits)
-        console.log(island.grid)
+        // console.log(island.grid)
+        island.unexplore(room_id);
     // }
 }
 

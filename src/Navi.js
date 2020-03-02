@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import db from './db';
 
-
 export default function Navi(props) {
     const {move,getRoom,footsteps,clear} = props
 

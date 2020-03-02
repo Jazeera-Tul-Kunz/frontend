@@ -6,9 +6,7 @@ import Explore from './Explore'
 function App() {
   return (
     <div className="App">
-      {/* <header> */}
         <Explore/>
-      {/* </header> */}
     </div>
   );
 }

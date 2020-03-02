@@ -24,7 +24,7 @@ export default function Explore() {
             setCooldown(lastcool => lastcool-1);
             if (cd <= 0) {
                 clearInterval(interval)
-                setTimer(false)
+                // setTimer(false)
             };
         },1000)
     }
@@ -103,7 +103,7 @@ export default function Explore() {
             <Navi move={move} getRoom={getRoom} footsteps={footsteps} clear={toggleModal} />
             {room && <Room room={room}/>}
             {cooldown > 0 && <div><span>Too tired to move! Must Wait: </span><br/>{cooldown}</div>}
-            {explored.length && <div>Explored Rooms</div>}
+            {explored.length > 0 && <div>Explored Rooms</div>}
             {explored.map(room => <Room room={room}/>)}
             {modal && <Button color="danger" onClick={clearFootsteps}>Doing this will erase your tracks.  Are you sure you want to proceed?</Button>}
         </>

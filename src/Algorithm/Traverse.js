@@ -4,6 +4,8 @@ const token = process.env.API_KEY;
 console.log('token', token);
 const fs = require('fs');
 
+
+
 class Traverse {
     constructor() {
         this.graph = {}
@@ -80,37 +82,3 @@ async function wrap() {
     }
 }
 wrap();
-
-    // flip_way = (جهة) => {
-    //     if (جهة == 'n') {
-    //         const عكس = 's' 
-    //     }
-       
-    //     if (جهة == 's') {
-    //         const عكس = 'n';
-    //     }
-           
-    //     if (جهة == 'e') {
-    //         const عكس = 'w'
-    //     }
-            
-    //     if (جهة == 'w') {
-    //         const عكس = 'e'
-    //     }
-    //     return عكس
-    // } 
-
-    // update_rooms = (way,old_room,new_room=None)=> {
-    //     if (!new_room) {
-    //         this.graph[old_room.id][way] = null;
-    //         return this.graph[old_room.id]
-    //     }
-        
-    //     else {
-    //         this.graph[old_room.id][way] = new_room.id;
-    //         const flip = this.flip_way(way);
-    //         this.graph[new_room.id][flip] = old_room.id;
-    //         return [this.graph[old_room.id],self.graph[new_room.id]]
-    //     }
-
-    // }

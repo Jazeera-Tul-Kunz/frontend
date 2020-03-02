@@ -1,13 +1,59 @@
 require('dotenv').config();
 const axiosAuth = require('../utils/axiosAuth');
 const token = process.env.API_KEY;
-const us = require('underscore');
+// const us = require('underscore');
+const _ = require('underscore');
+const Queue = require('../utils/queue');
 
 class IslandMap {
     constructor() {
         this.grid = {};
         this.path = [];
     }
+
+    bfs = (roomID) => {
+        const q = new Queue(roomID);
+        const visited = new Set();
+        q.enque([roomID]);
+
+        while (q.size() > 0) {
+            const path = q.deque();
+            const rID = path[path.length-1];
+            if (!(rID in visited)) {
+                if (rID == '?') {
+                    return path;
+                } else {
+                    visited.add(rID);
+                }
+                const nextIDs = this.neighbors(rID); 
+                console.log(nextIDs);
+                nextIDs.forEach(nID => {
+                    const newPath = [...path];
+                    newPath.push(nID);
+                    q.enque(new_path);
+                })
+            }
+        }
+    }
+
+    neighbors = (rID) => {
+        const neighIDs = Object.entries(this.grid[rID]).filter(w => w[1]);
+        console.log('neighbors', neighIDs);
+        return neighIDs;
+    }
+
+    travel = async (way) => {
+        try {
+            const res = await axiosAuth(token).post('/adv/move',{direction : way})
+            const room = res.data;
+            console.log(room);
+            await this.wait(room.cooldown);
+
+        } catch(err) {
+            console.log(err);
+        }
+    }
+
 
     size = () => {
         return Object.keys(this.grid).length
@@ -42,6 +88,18 @@ class IslandMap {
         })
     }
 
+    updateRooms = (firstID,way,nextID) => {
+        const flipped = this.flipWay(way);
+        this.grid[nextID][flipped] = firstID;
+        this.grid[firstID][way] = nextID;
+        return [this.grid[firstID],this.grid[nextID]]
+    }
+
+    flipWay = (way) => {
+        const waze = {'n' : 's', 's': 'n', 'e' : 'w', 'w' : 'e'};
+        return waze[way];
+    }
+
     unexplore = (id) => {
         if (!(id in this.grid)) {
             return null;
@@ -63,12 +121,9 @@ class IslandMap {
         // const unexplored = Object.fromEntries(entries);
         // console.log(unexplored);
 
-        const random_way = us.sample(unexplored);
-        console.log(random_way);
+        const random_way = _.sample(unexplored);
         return random_way[0];
     }
-
-
 
 }
 

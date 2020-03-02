@@ -1,7 +1,7 @@
 const LinkedList = require('../utils/linkedlist');
 
 class Queue {
-    constructor(data) {
+    constructor(data=null) {
         this.queue = new LinkedList(data);
     }
 
@@ -18,14 +18,14 @@ class Queue {
     }
 }
 
-q = new Queue(10);
-q.enque(20);
-q.enque(30);
-q.enque(40);
-console.log(q);
-q.deque();
-q.deque();
-console.log(q);
-x = q.size();
-console.log(x);
+// q = new Queue(10);
+// q.enque(20);
+// q.enque(30);
+// q.enque(40);
+// console.log(q);
+// q.deque();
+// q.deque();
+// console.log(q);
+// x = q.size();
+// console.log(x);
 

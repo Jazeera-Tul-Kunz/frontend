@@ -2,21 +2,30 @@ const LinkedList = require('../utils/linkedlist');
 
 class Queue {
     constructor(data=null) {
-        this.queue = new LinkedList(data);
+        // this.queue = new LinkedList(data);
+        this.queue = [];
     }
 
     enque(val) {
-        this.queue.attach(val);
+        // return this.queue.attach(val);
+        this.queue.push(val);
+        return this.queue[this.queue.length - 1]
     }
 
     deque() {
-        this.queue.behead();
+        // console.log(this.queue.behead());
+        return this.queue.shift()
+        // return this.queue.behead();
     }
 
     size() {
-        return this.queue.linkedlist.length;
+        // return this.queue.linkedlist.length;
+        return this.queue.length;
     }
 }
+
+module.exports = Queue;
+
 
 // q = new Queue(10);
 // q.enque(20);

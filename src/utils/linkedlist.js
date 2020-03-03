@@ -15,6 +15,11 @@ class LinkedList {
     }
 
     attach(val) {
+        if (!this.size()) {
+            this.head = new Node(val);
+            this.tail = this.head;
+        }
+
         const node = new Node(val);
         // node.prev = this.tail;
         this.tail.next = node;
@@ -38,9 +43,15 @@ class LinkedList {
     }
 
     behead() {
-        this.head.next.prev = null;
-        this.head = this.head.next;
-        return this.linkedlist.shift();
+        if (this.size() <= 1) {
+            this.head = null;
+            this.tail = null;
+        }
+        else {
+            this.head.next.prev = null;
+            this.head = this.head.next;
+            return this.linkedlist.shift();
+        }
     }
 
     size() {

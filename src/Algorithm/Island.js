@@ -12,45 +12,87 @@ class IslandMap {
     }
 
     bfs = (roomID) => {
-        const q = new Queue(roomID);
+        const q = new Queue();
         const visited = new Set();
         q.enque([roomID]);
+        console.log(q);
 
         while (q.size() > 0) {
             const path = q.deque();
+            console.log('path',path);
             const rID = path[path.length-1];
             if (!(rID in visited)) {
-                if (rID == '?') {
+                if (rID === '?') {
                     return path;
                 } else {
                     visited.add(rID);
                 }
                 const nextIDs = this.neighbors(rID); 
-                console.log(nextIDs);
+                // console.log(nextIDs);
                 nextIDs.forEach(nID => {
                     const newPath = [...path];
                     newPath.push(nID);
-                    q.enque(new_path);
+                    q.enque(newPath);
                 })
             }
         }
     }
 
+    backtrack = async (trail) => {
+        let roomID = trail.shift();
+        trail.pop(); // get rid of the first and last elements of the trail.  to get to the room that has unexplored exits.
+        console.log('trail in backtrack', trail);
+        for (let i=0; i<trail.length; i++) {
+            // console.log('i in for loop of backtrack', i, 'roomID', roomID, trail[i]);
+            const step = trail[i];
+            // console.log('step', step);
+            let [nextWay] = Object.entries(this.grid[roomID]).filter(way => this.grid[roomID][way[0]] == step);
+            nextWay = nextWay[0];
+            // console.log('nextWay in backtrack', nextWay);
+            // console.log('roomID', roomID);
+            // console.log(this.grid);
+            
+            try {
+                // console.log(nextWay)
+                console.log('roomID', roomID, 'way', nextWay, 'stepping room', step);
+                console.log(this.grid);
+                console.log('travelling');
+                const next = await this.travel(nextWay); //TODO: WISE EXPLORER
+                await this.wait(next.cooldown); 
+                console.log('after traveling in backtrack, next room: ', next.room_id);
+                // const room = await this.currentRoom();
+                roomID = next.room_id;
+                this.path.push(nextWay);
+            } catch(err) {
+                throw Error(err);
+            }
+        }
+    }
+
     neighbors = (rID) => {
-        const neighIDs = Object.entries(this.grid[rID]).filter(w => w[1]);
-        console.log('neighbors', neighIDs);
+        const neighWaze = Object.entries(this.grid[rID]).filter(w => w[1]);
+        console.log('neighbors', neighWaze);
+        const neighIDs = neighWaze.map( way => way[1])
+        console.log(neighIDs);
         return neighIDs;
     }
 
     travel = async (way) => {
+        // console.log('way in travel', way);
         try {
+            // console.log(axiosAuth(token));
+            // let room = null;
+            // if (r_id) {
+            //     const res = await axiosAuth(token).post('/adv/move',{direction : way, 'next_room_id' : String(r_id)})
+            //     room = res.data;
+            // }
+            // else {
             const res = await axiosAuth(token).post('/adv/move',{direction : way})
             const room = res.data;
-            console.log(room);
-            await this.wait(room.cooldown);
-
+            // }
+            return room;
         } catch(err) {
-            console.log(err);
+            console.log('error traveling',err.response.data);
         }
     }
 
@@ -122,6 +164,7 @@ class IslandMap {
         // console.log(unexplored);
 
         const random_way = _.sample(unexplored);
+        console.log('random_way', random_way);
         return random_way[0];
     }
 

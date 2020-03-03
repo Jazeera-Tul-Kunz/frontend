@@ -7,7 +7,8 @@ const fs = require('fs');
 async function wrapper() {
 
     async function exploration() {
-        const island = new IslandMap()
+        const rooms = [];
+        const island = new IslandMap();
         let r = null;
         while (island.size() < 500) {
             try {
@@ -50,7 +51,12 @@ async function wrapper() {
                 console.log(island.grid);
                 fs.writeFile('island-map.json', JSON.stringify(island.grid, null, "\t"), 'utf8', (err) => {
                     if (err) throw err; 
-                    console.log('written')
+                    console.log(`${JSON.stringify(island.grid[roomID])} written to file`);
+                })
+                rooms.push(r);
+                fs.writeFile('island-rooms.json', JSON.stringify(rooms, null, "\t"), 'utf8', (err) => {
+                    if (err) throw Error(err);
+                    console.log(`${r.room_id} written to file`);
                 })
             }
             return island;

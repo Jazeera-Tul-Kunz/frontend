@@ -1,0 +1,117 @@
+[
+	{
+		"room_id": 269,
+		"title": "A misty room",
+		"description": "You are standing on grass and surrounded by a dense mist. You can barely make out the exits in any direction.",
+		"coordinates": "(63,72)",
+		"elevation": 0,
+		"terrain": "NORMAL",
+		"players": [],
+		"items": [],
+		"exits": [
+			"n",
+			"s"
+		],
+		"cooldown": 1,
+		"errors": [],
+		"messages": []
+	},
+	{
+		"room_id": 227,
+		"title": "A misty room",
+		"description": "You are standing on grass and surrounded by a dense mist. You can barely make out the exits in any direction.",
+		"coordinates": "(63,71)",
+		"elevation": 0,
+		"terrain": "NORMAL",
+		"players": [],
+		"items": [],
+		"exits": [
+			"n",
+			"s"
+		],
+		"cooldown": 1,
+		"errors": [],
+		"messages": []
+	},
+	{
+		"room_id": 200,
+		"title": "A misty room",
+		"description": "You are standing on grass and surrounded by a dense mist. You can barely make out the exits in any direction.",
+		"coordinates": "(63,70)",
+		"elevation": 0,
+		"terrain": "NORMAL",
+		"players": [],
+		"items": [],
+		"exits": [
+			"n",
+			"s",
+			"e"
+		],
+		"cooldown": 1,
+		"errors": [],
+		"messages": []
+	},
+	{
+		"room_id": 147,
+		"title": "A misty room",
+		"description": "You are standing on grass and surrounded by a dense mist. You can barely make out the exits in any direction.",
+		"coordinates": "(63,69)",
+		"elevation": 0,
+		"terrain": "NORMAL",
+		"players": [],
+		"items": [],
+		"exits": [
+			"n",
+			"s",
+			"e",
+			"w"
+		],
+		"cooldown": 1,
+		"errors": [],
+		"messages": []
+	},
+	{
+		"room_id": 153,
+		"title": "A misty room",
+		"description": "You are standing on grass and surrounded by a dense mist. You can barely make out the exits in any direction.",
+		"coordinates": "(64,69)",
+		"elevation": 0,
+		"terrain": "NORMAL",
+		"players": [],
+		"items": [
+			"tiny treasure",
+			"small treasure",
+			"small treasure",
+			"shiny treasure",
+			"tiny treasure",
+			"small treasure",
+			"tiny treasure"
+		],
+		"exits": [
+			"e",
+			"w"
+		],
+		"cooldown": 1,
+		"errors": [],
+		"messages": []
+	},
+	{
+		"room_id": 147,
+		"title": "A misty room",
+		"description": "You are standing on grass and surrounded by a dense mist. You can barely make out the exits in any direction.",
+		"coordinates": "(63,69)",
+		"elevation": 0,
+		"terrain": "NORMAL",
+		"players": [],
+		"items": [],
+		"exits": [
+			"n",
+			"s",
+			"e",
+			"w"
+		],
+		"cooldown": 1,
+		"errors": [],
+		"messages": []
+	}
+]

@@ -1,6 +1,8 @@
 const IslandMap = require('./Island.js');
 
 //TODO: write out grid to JSON
+const fs = require('fs');
+
 
 async function wrapper() {
 
@@ -13,7 +15,7 @@ async function wrapper() {
                 console.log('current room in exploration', r.room_id);
                 await island.wait(r.cooldown);
             } catch(err) {
-                throw Error(err)
+                throw Error(`unable to get current room... ${err}`)
             }
 
             const roomID = r.room_id;
@@ -45,7 +47,11 @@ async function wrapper() {
                 island.loadRoom(next.room_id, next.exits);
                 island.updateRooms(roomID,newWay,next.room_id);
                 }
-            console.log(island.grid);
+                console.log(island.grid);
+                fs.writeFile('island-map.json', JSON.stringify(island.grid, null, "\t"), 'utf8', (err) => {
+                    if (err) throw err; 
+                    console.log('written')
+                })
             }
             return island;
         }
